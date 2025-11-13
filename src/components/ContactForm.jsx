@@ -34,26 +34,37 @@ export default function ContactForm() {
             return;
         }
 
-        const { error } = await supabase.from("contact_messages").insert({
-            name: formData.name,
-            email: formData.email,
-            message: formData.message,
-        });
+        try {
+            const { error } = await supabase.from("contact_messages").insert({
+                name: formData.name,
+                email: formData.email,
+                message: formData.message,
+            });
 
-        if (error) {
-            console.error(error);
+            if (error) {
+                console.error("Supabase insert error:", error);
+                setStatus({
+                    loading: false,
+                    success: "",
+                    // midlertidig viser vi faktisk supabase-feilen for debugging
+                    error: `Supabase-feil: ${error.message}`,
+                });
+            } else {
+                setStatus({
+                    loading: false,
+                    success:
+                        "Takk for meldingen! Vi tar kontakt så snart vi kan.",
+                    error: "",
+                });
+                setFormData({ name: "", email: "", message: "" });
+            }
+        } catch (err) {
+            console.error("Uventet feil ved lagring til Supabase:", err);
             setStatus({
                 loading: false,
                 success: "",
-                error: "Noe gikk galt. Prøv igjen senere.",
+                error: "Uventet feil ved lagring til Supabase.",
             });
-        } else {
-            setStatus({
-                loading: false,
-                success: "Takk for meldingen! Vi tar kontakt så snart vi kan.",
-                error: "",
-            });
-            setFormData({ name: "", email: "", message: "" });
         }
     }
 
@@ -63,15 +74,14 @@ export default function ContactForm() {
                 Kontakt meg (Supabase)
             </h1>
             <p className='text-sm text-gray-500 mb-6'>
-                Fyll inn skjemaet under, så lagrer vi henvendelsen i Supabase
-                eller sender deg en mail.
+                Fyll inn skjemaet under, så lagrer vi henvendelsen i Supabase.
             </p>
 
             <form onSubmit={handleSubmit} className='space-y-4'>
                 <div>
                     <label
                         htmlFor='name'
-                        className='block text-sm font-medium text-blue-500  mb-1'
+                        className='block text-sm font-medium text-blue-500 mb-1'
                     >
                         Navn
                     </label>
@@ -89,7 +99,7 @@ export default function ContactForm() {
                 <div>
                     <label
                         htmlFor='email'
-                        className='block text-sm font-medium text-blue-500  mb-1'
+                        className='block text-sm font-medium text-blue-500 mb-1'
                     >
                         E-post
                     </label>
@@ -107,7 +117,7 @@ export default function ContactForm() {
                 <div>
                     <label
                         htmlFor='message'
-                        className='block text-sm font-medium text-blue-500  mb-1'
+                        className='block text-sm font-medium text-blue-500 mb-1'
                     >
                         Melding
                     </label>

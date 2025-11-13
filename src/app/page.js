@@ -1,4 +1,5 @@
 import ContactForm from "@/components/ContactForm";
+import ContactFormEmailJS from "@/components/ContactFormEmailJS";
 
 export default function Home() {
     return (
@@ -81,10 +82,15 @@ export default function Home() {
                             </ul>
                         </div>
                     </section>
+                    <div className='flex flex-col gap-20 lg:flex-row'>
+                        <section className='md:mt-4'>
+                            <ContactForm />
+                        </section>
 
-                    <section className='md:mt-4'>
-                        <ContactForm />
-                    </section>
+                        <section className='md:mt-4'>
+                            <ContactFormEmailJS />
+                        </section>
+                    </div>
                 </div>
             </div>
         </main>

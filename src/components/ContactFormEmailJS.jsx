@@ -1,10 +1,10 @@
-// components/ContactForm.jsx
+// components/ContactFormEmailJS.jsx
 "use client";
 
 import { useState } from "react";
-import { supabase } from "@/lib/supabaseClient";
+import emailjs from "@emailjs/browser";
 
-export default function ContactForm() {
+export default function ContactFormEmailJS() {
     const [formData, setFormData] = useState({
         name: "",
         email: "",
@@ -16,6 +16,10 @@ export default function ContactForm() {
         success: "",
         error: "",
     });
+
+    const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
+    const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
+    const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
 
     function handleChange(e) {
         const { name, value } = e.target;
@@ -35,44 +39,67 @@ export default function ContactForm() {
             return;
         }
 
-        const { error } = await supabase.from("contact_messages").insert({
-            name: formData.name,
-            email: formData.email,
-            message: formData.message,
-        });
-
-        if (error) {
-            console.error(error);
+        if (!serviceId || !templateId || !publicKey) {
             setStatus({
                 loading: false,
                 success: "",
-                error: "Noe gikk galt. Prøv igjen senere.",
+                error: "EmailJS er ikke riktig konfigurert. Sjekk miljøvariablene dine.",
             });
-        } else {
+            return;
+        }
+
+        try {
+            const templateParams = {
+                from_name: formData.name,
+                from_email: formData.email,
+                message: formData.message,
+            };
+
+            const result = await emailjs.send(
+                serviceId,
+                templateId,
+                templateParams,
+                {
+                    publicKey,
+                }
+            );
+
+            console.log("EmailJS result:", result);
+
             setStatus({
                 loading: false,
-                success: "Takk for meldingen! Vi tar kontakt så snart vi kan.",
+                success: "Takk for meldingen! Den er sendt til innboksen min.",
                 error: "",
             });
+
             setFormData({ name: "", email: "", message: "" });
+        } catch (error) {
+            console.error("EmailJS error:", error);
+            setStatus({
+                loading: false,
+                success: "",
+                error: "Noe gikk galt ved sending av e-post. Prøv igjen senere.",
+            });
         }
     }
 
     return (
-        <div className='max-w-md w-full mx-auto p-6 rounded-2xl border border-red-600 shadow-[0_0_40px_rgba(220,38,38,0.55)] bg-white animate-heartbeat'>
+        <div className='max-w-md w-full mx-auto p-6 rounded-2xl border border-blue-600 shadow-[0_0_40px_rgba(37,99,235,0.55)] bg-white animate-heartbeat'>
             <h1 className='text-2xl font-semibold mb-4 text-gray-900'>
-                Kontakt meg (Supabase)
+                Kontakt meg (EmailJS)
             </h1>
             <p className='text-sm text-gray-500 mb-6'>
-                Fyll inn skjemaet under, så lagrer vi henvendelsen i Supabase
-                eller sender deg en mail.
+                Denne varianten sender meldingen direkte som{" "}
+                <span className='font-semibold'>e-post</span> via EmailJS –
+                ingen database, bare rett i innboksen.
             </p>
 
             <form onSubmit={handleSubmit} className='space-y-4'>
+                {/* Navn */}
                 <div>
                     <label
                         htmlFor='name'
-                        className='block text-sm font-medium text-blue-500  mb-1'
+                        className='block text-sm font-medium text-red-700 mb-1'
                     >
                         Navn
                     </label>
@@ -87,10 +114,11 @@ export default function ContactForm() {
                     />
                 </div>
 
+                {/* E-post */}
                 <div>
                     <label
                         htmlFor='email'
-                        className='block text-sm font-medium text-blue-500  mb-1'
+                        className='block text-sm font-medium text-red-700  mb-1'
                     >
                         E-post
                     </label>
@@ -105,10 +133,11 @@ export default function ContactForm() {
                     />
                 </div>
 
+                {/* Melding */}
                 <div>
                     <label
                         htmlFor='message'
-                        className='block text-sm font-medium text-blue-500  mb-1'
+                        className='block text-sm font-medium text-red-700  mb-1'
                     >
                         Melding
                     </label>
@@ -132,6 +161,7 @@ export default function ContactForm() {
                 </button>
             </form>
 
+            {/* Status-meldinger */}
             {status.success && (
                 <p className='mt-4 text-sm text-green-600'>{status.success}</p>
             )}

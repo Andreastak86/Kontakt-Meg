@@ -1,4 +1,3 @@
-// components/ContactFormEmailJS.jsx
 "use client";
 
 import { useState } from "react";
@@ -95,7 +94,6 @@ export default function ContactFormEmailJS() {
             </p>
 
             <form onSubmit={handleSubmit} className='space-y-4'>
-                {/* Navn */}
                 <div>
                     <label
                         htmlFor='name'
@@ -114,7 +112,6 @@ export default function ContactFormEmailJS() {
                     />
                 </div>
 
-                {/* E-post */}
                 <div>
                     <label
                         htmlFor='email'
@@ -133,7 +130,6 @@ export default function ContactFormEmailJS() {
                     />
                 </div>
 
-                {/* Melding */}
                 <div>
                     <label
                         htmlFor='message'
@@ -161,7 +157,6 @@ export default function ContactFormEmailJS() {
                 </button>
             </form>
 
-            {/* Status-meldinger */}
             {status.success && (
                 <p className='mt-4 text-sm text-green-600'>{status.success}</p>
             )}

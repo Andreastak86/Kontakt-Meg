@@ -1,5 +1,6 @@
 import ContactForm from "@/components/ContactForm";
 import ContactFormEmailJS from "@/components/ContactFormEmailJS";
+import Link from "next/link";
 
 export default function Home() {
     return (
@@ -25,19 +26,31 @@ export default function Home() {
                                 </span>
                             </h1>
                             <p className='text-sm sm:text-base text-slate-300/90 max-w-xl'>
-                                Vi bygger et enkelt{" "}
+                                Demo for et enkelt{" "}
                                 <span className='font-semibold'>
                                     kontakt meg-skjema
                                 </span>{" "}
-                                i Next.js – først koblet mot{" "}
+                                i Next.js – koblet mot{" "}
                                 <span className='font-semibold text-emerald-300'>
-                                    Supabase
+                                    <Link
+                                        href='https://supabase.com'
+                                        className='text-2xl'
+                                        target='_blank'
+                                    >
+                                        Supabase
+                                    </Link>
                                 </span>{" "}
-                                (database &amp; RLS), og deretter mot{" "}
+                                (database &amp; RLS), og mot{" "}
                                 <span className='font-semibold text-sky-300'>
-                                    EmailJS
+                                    <Link
+                                        href='https://www.emailjs.com/'
+                                        className='text-2xl'
+                                        target='_blank'
+                                    >
+                                        EmailJS
+                                    </Link>
                                 </span>{" "}
-                                for e-postvarsling. Samme UI, to forskjellige
+                                for registrering. Samme UI, to forskjellige
                                 backends.
                             </p>
                         </div>
@@ -60,7 +73,7 @@ export default function Home() {
                                 </p>
                                 <p className='text-sm text-slate-200'>
                                     Sender henvendelsen rett i innboksen. Ingen
-                                    database, bare ren “ping meg på mail”.{" "}
+                                    database, bare: send denne på mail.{" "}
                                 </p>
                             </div>
                         </div>

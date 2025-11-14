@@ -89,8 +89,8 @@ export default function ContactFormEmailJS() {
             </h1>
             <p className='text-sm text-gray-500 mb-6'>
                 Denne varianten sender meldingen direkte som{" "}
-                <span className='font-semibold'>e-post</span> via EmailJS –
-                ingen database, bare rett i innboksen.
+                <span className='font-semibold'> email</span> via EmailJS –
+                ingen database.
             </p>
 
             <form onSubmit={handleSubmit} className='space-y-4'>
